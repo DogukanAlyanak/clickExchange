@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Jura:300,400,500,600,700&display=swap');
+.App-header {
+    font-family: 'Jura', sans-serif;
+    font-weight: 400;
+    font-size: 30px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+.logo,
+.logo:hover,
+.logo:visited,
+.logo:active,
+.logo:link {
+    cursor: pointer;
+    color: #ffffff;
+    text-decoration: none;
+    text-decoration-line: none;
+}
