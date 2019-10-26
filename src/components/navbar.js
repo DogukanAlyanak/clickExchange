@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import logo from '../img/REDS-Logo.png';
 import '../css/Navbar.css'
 
 class navbar extends Component {
@@ -7,10 +8,12 @@ class navbar extends Component {
             <div>
                 <header className="App-header">
                     <a href="/" className= "logo">
-                     LaJeans™
+                     <img 
+                     src={logo} 
+                     alt="RED'S™" title="RED'S™"/>
                      </a>
+                     <div className="LogoTitle">Jeans Simulator</div>
                 </header>
-                <hr/>
             </div>
         )
     }

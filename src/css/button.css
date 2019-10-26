@@ -1,0 +1,31 @@
+button:visited,
+button:link,
+button {
+    text-decoration: none;
+    user-select: none;
+    cursor: pointer;
+    color: white;
+    background-color: #cd0e0e;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    border: 0px;
+}
+
+button:hover {
+    background-color: #ff0000;
+}
+
+button:active {
+    background-color: #ff2f2f;
+}
+
+button:disabled {
+    color: rgb(0, 0, 0);
+    background-color: rgb(125, 0, 0);
+}
+
+.bt-block {
+    width: 100%;
+}

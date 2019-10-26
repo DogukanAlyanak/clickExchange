@@ -6,7 +6,9 @@
     align-items: center;
     justify-content: center;
     color: white;
-    text-align: center;
+    margin-bottom: 25px;
+    margin-top: -20.5px;
+    margin-left: 25px;
 }
 
 .logo,
@@ -18,4 +20,12 @@
     color: #ffffff;
     text-decoration: none;
     text-decoration-line: none;
+}
+
+.logo img {
+    max-width: 120px;
+}
+
+.LogoTitle {
+    float: right;
 }

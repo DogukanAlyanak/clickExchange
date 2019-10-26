@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Game from '../components/game'
+import '../css/button.css'
+import '../css/header.css'
 
 class home extends Component {
     constructor(props) {
@@ -29,73 +31,50 @@ class home extends Component {
             manufacturedJeans,
             price,
             buyCotton,
-            UnitJeansCottonCost,
             UnitCottonMoneyCost,
             cotton,
             currentJeans,
             soldJeans,
-            produceJeans,
             money
         } = this.game;
 
         return (
             <div>
-                <table style={{ width: "100%" }}>
+
+                <div className="text-center">
+                    <button
+                        className="jeans-manu"
+                        disabled={!this.game.canProduceJean()}
+                        onClick={() => this.game.produceJeans()}
+                    >
+                        Jeans Üret
+                    </button>
+                </div>
+
+                <table className="part-header">
                     <tr>
-                        <td style={{ width: "33%" }}>
+                        <td>
+                            <h3>İşletme</h3>
                         </td>
-                        <td style={{ width: "33%" }}>
-                            <button
-                                disabled={!this.game.canProduceJean()}
-                                onClick={produceJeans}
-                            >
-                                Jeans Üret
-                            </button>
-                        </td>
-                        <td style={{ width: "33%" }}>
+                        <td>
+                            <div style={{ float: "right" }}>
+                                Para : {money} ₺
+                            </div>
                         </td>
                     </tr>
                 </table>
+                <hr />
 
-                <h3>İşletme</h3>
-
-                <table style={{ width: "100%" }}>
-
-                    <tr>
-                        <td style={{ width: "33%" }}>
-                            Kasadaki Para :
-                        </td>
-                        <td style={{ width: "33%" }}>
-                            {money} ₺
-                        </td>
-                        <td style={{ width: "33%" }}></td>
-                    </tr>
+                <table className="tl-body">
 
                     <tr>
-                        <td>
+                        <td className="tl-3">
                             Depodaki Jeans :
                         </td>
-                        <td>
+                        <td className="tl-3">
                             {currentJeans}
                         </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Üretilen Jeans :
-                        </td>
-                        <td>
-                            {manufacturedJeans}
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Satılan Jeans :
-                        </td>
-                        <td>
-                            {soldJeans}
-                        </td>
+                        <td className="tl-3"></td>
                     </tr>
 
                     <tr>
@@ -110,17 +89,19 @@ class home extends Component {
                                 onClick={this.game.increasePrice}
                             > + </button>
                             <button
-                                disabled={!this.game.canDecreasePrice()} 
+                                disabled={!this.game.canDecreasePrice()}
                                 onClick={this.game.decreasePrice}
                             > - </button>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Pamuk Mâaliyeti :
+                            {/*
+                           Pamuk Mâaliyeti :
                         </td>
                         <td>
                             {UnitJeansCottonCost} Pamuk
+                            */}
                         </td>
                     </tr>
 
@@ -133,20 +114,56 @@ class home extends Component {
                         </td>
                     </tr>
 
+                    <tr>
+                        <td>
+                            Satılan Jeans :
+                        </td>
+                        <td>
+                            {soldJeans}
+                        </td>
+                    </tr>
+
                 </table>
 
-                <h3>Üretim</h3>
 
-                <table style={{ width: "100%" }}>
+                <br />
+                <table className="part-header">
+                    <tr>
+                        <td>
+                            <h3>Üretim</h3>
+                        </td>
+                        <td>
+                            <div style={{ float: "right" }}>
+                                Jeans Üretimi : {lastManufacturedRate}/sn
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <hr />
+
+                <table className="tl-body">
 
                     <tr>
-                        <td style={{ width: "33%" }}>
-                            Jeans / Saniye :
+                        <td className="tl-3">
+                            Üretilen Jeans :
                         </td>
-                        <td style={{ width: "33%" }}>
-                            {lastManufacturedRate}
+                        <td className="tl-3">
+                            {manufacturedJeans}
                         </td>
-                        <td style={{ width: "33%" }}></td>
+                        <td className="tl-3">
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canBuyCotton()}
+                                onClick={() => this.game.AutoManufactureStatusToggle()}
+                                title="Çalışanların Jeans Üretmesini Durdurup / Devam Ettirir."
+                            >
+                                {
+                                    this.game.AutoManufactureStatus
+                                        ? "Üretimi DURDUR"
+                                        : "Üretime DEVAM"
+                                } !
+                            </button>
+                        </td>
                     </tr>
 
                     <tr>
@@ -158,18 +175,163 @@ class home extends Component {
                         </td>
                         <td>
                             <button
+                                className="bt-block"
                                 disabled={!this.game.canBuyCotton()}
                                 onClick={buyCotton}
                             >
-                                Satın Al
+                                1 Kg Pamuk Al ({UnitCottonMoneyCost}₺)
                             </button>
-                            <br/>
-                            Maaliyet(Pamuk): 
-                            <br/> 1000 gr = {UnitCottonMoneyCost} ₺ 
                         </td>
                     </tr>
 
                 </table>
+
+                <br />
+                <table className="part-header">
+                    <tr>
+                        <td>
+                            <h3>Çalışanlar</h3>
+                        </td>
+                        <td>
+                            <div style={{ float: "right" }}>
+                                Çalışan Sayısı : {this.game.StuffCount}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <hr />
+
+                <table className="tl-body">
+
+                    <tr>
+                        <th style={{ width: "20%" }}>
+                            Rütbesi
+                        </th>
+                        <th style={{ width: "10%" }}>
+                            Kişi
+                        </th>
+                        <th style={{ width: "20%" }}>
+                            üretim
+                        </th>
+                        <th style={{ width: "25%" }}>
+                        </th>
+                        <th style={{ width: "25%" }}>
+
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Çalışan :
+                        </td>
+                        <td>
+                            {this.game.Generators.WorkerCount}
+                        </td>
+                        <td>
+                            {this.game.Generators.WorkerManufactureRate}/sn
+                        </td>
+                        <td>
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canBuyGenerator("WORKER")}
+                                onClick={() => this.game.BuyGenerator("WORKER")}
+                            >
+                                İşe Al
+                                <br />
+                                {this.game.Generators.WorkerCost} ₺ Öde
+                        </button>
+                        </td>
+                        <td>
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canFireGenerator("WORKER")}
+                                onClick={() => this.game.FireGenerator("WORKER")}
+                                title="Tazminat Öde"
+                            >
+                                Kov
+                                <br />
+                                {this.game.indemnityCost(
+                                    this.game.Generators.WorkerCost
+                                )} ₺ Öde
+                        </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Uzman :
+                        </td>
+                        <td>
+                            {this.game.Generators.ForemanCount}
+                        </td>
+                        <td>
+                            {this.game.Generators.ForemanManufactureRate}/sn
+                        </td>
+                        <td>
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canBuyGenerator("FOREMAN")}
+                                onClick={() => this.game.BuyGenerator("FOREMAN")}
+                            >
+                                İşe Al
+                                <br />
+                                {this.game.Generators.ForemanCost} ₺ Öde
+                        </button>
+                        </td>
+                        <td>
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canFireGenerator("FOREMAN")}
+                                onClick={() => this.game.FireGenerator("FOREMAN")}
+                                title="Tazminat Öde"
+                            >
+                                Kov
+                                <br />
+                                {this.game.indemnityCost(
+                                    this.game.Generators.ForemanCost
+                                )} ₺ Öde
+                        </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Usta :
+                        </td>
+                        <td>
+                            {this.game.Generators.MasterCount}
+                        </td>
+                        <td>
+                            {this.game.Generators.MasterManufactureRate}/sn
+                        </td>
+                        <td>
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canBuyGenerator("MASTER")}
+                                onClick={() => this.game.BuyGenerator("MASTER")}
+                            >
+                                İşe Al
+                                <br />{this.game.Generators.MasterCost} ₺ Öde
+                        </button>
+                        </td>
+                        <td>
+                            <button
+                                className="bt-block"
+                                disabled={!this.game.canFireGenerator("MASTER")}
+                                onClick={() => this.game.FireGenerator("MASTER")}
+                                title="Tazminat Öde"
+                            >
+                                Kov
+                                <br />
+                                {this.game.indemnityCost(
+                                    this.game.Generators.MasterCost
+                                )} ₺ Öde
+                        </button>
+                        </td>
+                    </tr>
+
+                </table>
+
             </div>
         )
     }

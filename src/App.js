@@ -8,6 +8,7 @@ import home from './pages/home'
 function App() {
   return (
     <Router>
+    <div className="app-body">
       <div className="App">
         <Navbar />
       <Switch>
@@ -15,6 +16,7 @@ function App() {
         <Route component={NotFound} />
       </Switch>
       </div>
+    </div>
     </Router>
   );
 }
