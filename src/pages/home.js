@@ -87,7 +87,7 @@ class home extends Component {
                         <td>
                             <button
                                 onClick={this.game.increasePrice}
-                            > + </button>
+                            > + </button>&nbsp;
                             <button
                                 disabled={!this.game.canDecreasePrice()}
                                 onClick={this.game.decreasePrice}
@@ -153,7 +153,6 @@ class home extends Component {
                         <td className="tl-3">
                             <button
                                 className="bt-block"
-                                disabled={!this.game.canBuyCotton()}
                                 onClick={() => this.game.AutoManufactureStatusToggle()}
                                 title="Çalışanların Jeans Üretmesini Durdurup / Devam Ettirir."
                             >
@@ -183,14 +182,12 @@ class home extends Component {
                             </button>
                         </td>
                     </tr>
-
                 </table>
 
-                <br />
                 <table className="part-header">
                     <tr>
                         <td>
-                            <h3>Çalışanlar</h3>
+                            <h4>Çalışanlar</h4>
                         </td>
                         <td>
                             <div style={{ float: "right" }}>
@@ -199,7 +196,6 @@ class home extends Component {
                         </td>
                     </tr>
                 </table>
-                <hr />
 
                 <table className="tl-body">
 
@@ -228,7 +224,7 @@ class home extends Component {
                             {this.game.Generators.WorkerCount}
                         </td>
                         <td>
-                            {this.game.Generators.WorkerManufactureRate}/sn
+                            {this.game.Generators.WorkerManufactureRate} jeans/sn
                         </td>
                         <td>
                             <button
@@ -241,20 +237,22 @@ class home extends Component {
                                 {this.game.Generators.WorkerCost} ₺ Öde
                         </button>
                         </td>
-                        <td>
-                            <button
-                                className="bt-block"
-                                disabled={!this.game.canFireGenerator("WORKER")}
-                                onClick={() => this.game.FireGenerator("WORKER")}
-                                title="Tazminat Öde"
-                            >
-                                Kov
+                        {this.game.Generators.WorkerCount !== 0 && (
+                            <td>
+                                <button
+                                    className="bt-block"
+                                    disabled={!this.game.canFireGenerator("WORKER")}
+                                    onClick={() => this.game.FireGenerator("WORKER")}
+                                    title="Tazminat Öde"
+                                >
+                                    Kov
                                 <br />
-                                {this.game.indemnityCost(
-                                    this.game.Generators.WorkerCost
-                                )} ₺ Öde
+                                    {this.game.indemnityCost(
+                                        this.game.Generators.WorkerCost
+                                    )} ₺ Öde
                         </button>
-                        </td>
+                            </td>
+                        )}
                     </tr>
 
                     <tr>
@@ -265,7 +263,7 @@ class home extends Component {
                             {this.game.Generators.ForemanCount}
                         </td>
                         <td>
-                            {this.game.Generators.ForemanManufactureRate}/sn
+                            {this.game.Generators.ForemanManufactureRate} jeans/sn
                         </td>
                         <td>
                             <button
@@ -278,20 +276,22 @@ class home extends Component {
                                 {this.game.Generators.ForemanCost} ₺ Öde
                         </button>
                         </td>
-                        <td>
-                            <button
-                                className="bt-block"
-                                disabled={!this.game.canFireGenerator("FOREMAN")}
-                                onClick={() => this.game.FireGenerator("FOREMAN")}
-                                title="Tazminat Öde"
-                            >
-                                Kov
+                        {this.game.Generators.ForemanCount !== 0 && (
+                            <td>
+                                <button
+                                    className="bt-block"
+                                    disabled={!this.game.canFireGenerator("FOREMAN")}
+                                    onClick={() => this.game.FireGenerator("FOREMAN")}
+                                    title="Tazminat Öde"
+                                >
+                                    Kov
                                 <br />
-                                {this.game.indemnityCost(
-                                    this.game.Generators.ForemanCost
-                                )} ₺ Öde
+                                    {this.game.indemnityCost(
+                                        this.game.Generators.ForemanCost
+                                    )} ₺ Öde
                         </button>
-                        </td>
+                            </td>
+                        )}
                     </tr>
 
                     <tr>
@@ -302,7 +302,7 @@ class home extends Component {
                             {this.game.Generators.MasterCount}
                         </td>
                         <td>
-                            {this.game.Generators.MasterManufactureRate}/sn
+                            {this.game.Generators.MasterManufactureRate} jeans/sn
                         </td>
                         <td>
                             <button
@@ -314,23 +314,147 @@ class home extends Component {
                                 <br />{this.game.Generators.MasterCost} ₺ Öde
                         </button>
                         </td>
-                        <td>
-                            <button
-                                className="bt-block"
-                                disabled={!this.game.canFireGenerator("MASTER")}
-                                onClick={() => this.game.FireGenerator("MASTER")}
-                                title="Tazminat Öde"
-                            >
-                                Kov
+                        {this.game.Generators.MasterCount !== 0 && (
+                            <td>
+                                <button
+                                    className="bt-block"
+                                    disabled={!this.game.canFireGenerator("MASTER")}
+                                    onClick={() => this.game.FireGenerator("MASTER")}
+                                    title="Tazminat Öde"
+                                >
+                                    Kov
                                 <br />
-                                {this.game.indemnityCost(
-                                    this.game.Generators.MasterCost
-                                )} ₺ Öde
+                                    {this.game.indemnityCost(
+                                        this.game.Generators.MasterCost
+                                    )} ₺ Öde
                         </button>
-                        </td>
+                            </td>
+                        )}
                     </tr>
 
                 </table>
+
+                <br />
+                <table className="part-header">
+                    <tr>
+                        <td>
+                            <h3>Malzeme Alımı</h3>
+                        </td>
+                        <td>
+                            <div style={{ float: "right" }}>
+                                {null//Çalışan Sayısı : {this.game.StuffCount
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <hr />
+
+
+                <table className="tl-body">
+                    {this.game.soldJeans
+                        >= this.game.SalesLimitForBuyAutoBuyer
+                        && (
+
+                            <tr>
+                                <td title="Satın Alma Müdürü" className="tl-2">
+                                    Satın Alma Müdürü :
+                                </td>
+
+                                <td className="tl-4">
+                                    {this.game.hasAutoBuyer === false
+                                        && (
+                                            <button
+                                                className="bt-block"
+                                                disabled={!this.game.canBuyAutoBuyer()}
+                                                onClick={() => this.game.BuyAutoBuyer()}
+                                            >
+                                                İşe Al
+                                <br />
+                                                {this.game.AutoBuyerCost} ₺ Öde
+                                    </button>
+                                        )}
+                                </td>
+
+                                <td className="tl-4">
+                                    {this.game.hasAutoBuyer === true
+                                        && (
+                                            <button
+                                                className="bt-block"
+                                                disabled={!this.game.canFireAutoBuyer()}
+                                                onClick={() => this.game.FireAutoBuyer()}
+                                                title="Tazminat Öde"
+                                            >
+                                                Kov
+                                <br />
+                                                {this.game.indemnityCost(
+                                                    this.game.AutoBuyerCost
+                                                )} ₺ Öde
+                                    </button>
+                                        )}
+                                </td>
+                            </tr>
+                        )
+                    }
+                </table>
+
+                <table className="tl-body">
+                    {this.game.soldJeans >= this.game.SalesLimitForBuyAutoBuyer
+                        && this.game.hasAutoBuyer === true &&
+                        (
+                            <tr>
+                                <td style={{ width: "40%" }}>
+                                    Otomatik Pamuk <br />
+                                    Alma Üst Limiti :
+                        </td>
+                                <td style={{ width: "30%" }}>
+                                    {this.game.AutoBuyerBuyCottonTopLimit} gr
+                                    <br />
+                                    {this.game.AutoBuyerBuyMoneyTopLimit} ₺
+                        </td>
+                                <td style={{ width: "30%" }}>
+                                    <button
+                                        onClick={() => this.game.increaseAutoBuyingTopLimit()}
+                                    >
+                                        +
+                            </button>&nbsp;
+                                     <button
+                                        disabled={!this.game.canDecreaseAutoBuyingTopLimit()}
+                                        onClick={() => this.game.decreaseAutoBuyingTopLimit()}
+                                    >
+                                        -
+                            </button>&nbsp;
+                            <button
+                                        disabled={null}
+                                        onClick={() => this.game.AutoBuyerWorkStatusToggle()}
+                                        title="Otomatik Pamuk Satın Alma"
+                                    >
+                                        {this.game.AutoBuyerWorkStatus
+                                            ? "Durdur"
+                                            : "Başlat"
+                                        }
+                                    </button>
+
+                                    <br />
+
+                                    <button
+                                        onClick={() => this.game.AutoBuyerIncreaseMoneyLimit()}
+                                    >
+                                        +
+                                     </button>&nbsp;
+                                     <button
+                                        disabled={!this.game.canAutoBuyerDecreaseMoneyLimit()}
+                                        onClick={() => this.game.AutoBuyerDecreaseMoneyLimit()}
+                                    >
+                                        -
+                            </button>
+                                </td>
+                            </tr>
+                        )}
+
+                </table>
+
+
 
             </div>
         )

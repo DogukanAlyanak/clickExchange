@@ -9,7 +9,7 @@ class Game {
     money = 3000;               // Para (Kasadaki)
 
     // Pricing - Fiyatlandırma
-    price = 70;                 // Jeans Ürün fiyatı
+    price = 20;                 // Jeans Ürün fiyatı
     UnitJeansCottonCost = 600;  // Jeans'in Pamuk Bedeli
     firstUnitCottonMoneyCost = 30;   // Pamuğun İlk TL Bedeli
     UnitCottonMoneyCost = this.firstUnitCottonMoneyCost;  // anlık
@@ -28,8 +28,35 @@ class Game {
     lastCottonBuyCount = 0;
     cottonBuyingRate = 0;
 
+    // Satın Alma Müdürü
+    SalesLimitForBuyAutoBuyer = 150
+    AutoBuyerCost = 25800
+    hasAutoBuyer = false;
+    AutoBuyerWorkStatus = false;
+    AutoBuyerBuyCottonTopLimit = 2000
+    AutoBuyerBuyMoneyTopLimit = this.UnitCottonMoneyCost + 10
+    AutoBuyingCottonIncreaseAndDecreaseAmount = 100
+    AutoBuyingMoneyIncreaseAndDecreaseAmount = 1
+
     // Oyun Döngüsü
     update = () => {
+        if (
+            this.cotton <= this.AutoBuyerBuyCottonTopLimit
+            && this.canBuyCotton
+            && this.hasAutoBuyer
+            && this.UnitCottonMoneyCost <= this.AutoBuyerBuyMoneyTopLimit
+            && this.AutoBuyerWorkStatus === true
+            && this.money >= this.UnitCottonMoneyCost
+        ) {
+            this.buyCotton()
+        }
+
+
+
+
+
+
+
         // Üreticilerin Jeans Üretimi
         if (Date.now() - this.GeneratorsLastGeneratedAt > 1000
             && this.AutoManufactureStatus) {
@@ -52,7 +79,6 @@ class Game {
         this.StuffCount = this.Generators.WorkerCount
             + this.Generators.ForemanCount
             + this.Generators.MasterCount;
-
 
 
 
@@ -104,6 +130,100 @@ class Game {
 
 
 
+
+
+
+
+    
+
+    // Satın Alma Gözükür mü ?
+    canVisiableAutoBuyer = () => {
+        return this.soldJeans
+            >= this.SalesLimitForBuyAutoBuyer
+    }
+
+    // Satın Alma Müdürü Satın Alınabilir mi ?
+    canBuyAutoBuyer = () => {
+        return this.money >= this.AutoBuyerCost
+            && this.hasAutoBuyer === false
+    }
+
+
+    // Satın Alma Müdürü Kovulabilir mi ?
+    canFireAutoBuyer = () => {
+        return this.money >= this.indemnityCost(this.AutoBuyerCost)
+            && this.hasAutoBuyer !== false
+    }
+
+    // Satın Alma Müdürü Satın AL ?
+    BuyAutoBuyer = () => {
+        if (!this.canBuyAutoBuyer && this.hasAutoBuyer !== false) {
+            return;
+        }
+        this.money -= this.AutoBuyerCost
+        this.hasAutoBuyer = true
+    }
+
+    // Satın Alma Müdürü Kov!
+    FireAutoBuyer = () => {
+        if (this.canFireAutoBuyer && this.hasAutoBuyer !== false) {
+            this.money -= this.indemnityCost(this.AutoBuyerCost)
+            this.hasAutoBuyer = false
+        }
+    }
+
+    // Otomatik Satın Alma Üst Limitini Azaltılabilir mi?
+    canDecreaseAutoBuyingTopLimit = () => {
+        return this.AutoBuyerBuyCottonTopLimit
+            >= this.AutoBuyingCottonIncreaseAndDecreaseAmount
+    }
+
+    // Otomatik Satın Alma Üst Limitini Azalt!
+    decreaseAutoBuyingTopLimit = () => {
+        if (!this.canDecreaseAutoBuyingTopLimit()) {
+            return;
+        }
+        this.AutoBuyerBuyCottonTopLimit
+            -= this.AutoBuyingCottonIncreaseAndDecreaseAmount
+    }
+
+    // Otomatik Satın Alma Pamuk Üst Limitini Arttır!
+    increaseAutoBuyingTopLimit = () => {
+        this.AutoBuyerBuyCottonTopLimit
+            += this.AutoBuyingCottonIncreaseAndDecreaseAmount
+    }
+
+    // Otomatik Satın Alma Durumu Toogle
+    AutoBuyerWorkStatusToggle = () => {
+        this.AutoBuyerWorkStatus = !this.AutoBuyerWorkStatus
+    }
+
+    // Otomatik Satın Alma Para Limiti Arttırılabilir mi?
+    canAutoBuyerDecreaseMoneyLimit = () => {
+        return this.AutoBuyerBuyMoneyTopLimit > 0
+    }
+
+    // Otomatik Satın Alma Para Limiti Arttır!
+    AutoBuyerIncreaseMoneyLimit = () => {
+        this.AutoBuyerBuyMoneyTopLimit
+            += this.AutoBuyingMoneyIncreaseAndDecreaseAmount
+    }
+
+    // Otomatik Satın Alma Para Limiti Arttır!
+    AutoBuyerDecreaseMoneyLimit = () => {
+        if (!this.canAutoBuyerDecreaseMoneyLimit()) {
+            return;
+        }
+        this.AutoBuyerBuyMoneyTopLimit
+            -= this.AutoBuyingMoneyIncreaseAndDecreaseAmount
+    }
+
+
+
+
+
+
+
     // Üreticiler
     Generators = {
         WorkerCount: 0,
@@ -140,6 +260,9 @@ class Game {
 
     //  Üretici - Çalışan Alımı
     BuyGenerator = type => {
+        if (!this.canBuyGenerator(type)) {
+            return;
+        }
         switch (type) {
             case "WORKER":
                 this.money -= this.Generators.WorkerCost;
@@ -163,14 +286,14 @@ class Game {
     canFireGenerator = type => {
         switch (type) {
             case "WORKER":
-                return this.money >= this.indemnityCost(this.Generators.WorkerCost) 
-                && this.Generators.WorkerCount !== 0;
+                return this.money >= this.indemnityCost(this.Generators.WorkerCost)
+                    && this.Generators.WorkerCount !== 0;
             case "FOREMAN":
-                return this.money >= this.indemnityCost(this.Generators.ForemanCost) 
-                && this.Generators.ForemanCount !== 0;
+                return this.money >= this.indemnityCost(this.Generators.ForemanCost)
+                    && this.Generators.ForemanCount !== 0;
             case "MASTER":
-                return this.money >= this.indemnityCost(this.Generators.MasterCost) 
-                && this.Generators.MasterCount !== 0;
+                return this.money >= this.indemnityCost(this.Generators.MasterCost)
+                    && this.Generators.MasterCount !== 0;
 
             default:
                 return false;
@@ -184,6 +307,9 @@ class Game {
 
     //  Üretici - Çalışan Kovumu
     FireGenerator = type => {
+        if (!this.canFireGenerator(type)) {
+            return;
+        }
         switch (type) {
             case "WORKER":
                 this.money -= (this.Generators.WorkerCost / 3) * 2;
@@ -215,6 +341,7 @@ class Game {
 
 
 
+
     // Jeans Üretilebilir mi?
     canProduceJean = (count = 1) => {
         return this.cotton >= this.UnitJeansCottonCost * count
@@ -222,11 +349,12 @@ class Game {
 
     // Jeans Üret - Produce Jeans 
     produceJeans = (count = 1) => {
-        if (this.canProduceJean(count)) {
-            this.currentJeans += count;    // Mevcut Jeans'i 1 arttır
-            this.manufacturedJeans += count;   //  Üretilen Jeans'i 1 arttır
-            this.cotton -= this.UnitJeansCottonCost * count;
+        if (!this.canProduceJean(count)) {
+            return;
         }
+        this.currentJeans += count;    // Mevcut Jeans'i 1 arttır
+        this.manufacturedJeans += count;   //  Üretilen Jeans'i 1 arttır
+        this.cotton -= this.UnitJeansCottonCost * count;
     }
 
 
@@ -240,6 +368,9 @@ class Game {
 
     // Pamuk Satın Al!
     buyCotton = () => {
+        if (!this.canBuyCotton()) {
+            return
+        }
         this.cotton += 1000;
         this.cottonBuyCount++;
         this.money -= this.UnitCottonMoneyCost;
@@ -260,6 +391,9 @@ class Game {
 
     // Fiyat Düşür!
     decreasePrice = () => {
+        if (!this.canDecreasePrice()) {
+            return;
+        }
         this.price -= 1;
     }
 
@@ -268,8 +402,14 @@ class Game {
 
     // Halk Talebi Güncelle!
     updateDemand = () => {
-        const rate = 100 - (this.price / 70) * 100;
-        this.demandRate = Math.floor(Math.min(Math.max(0, rate), 100));
+        //this.price = 60
+        let rate;
+        if (this.price <= 50) {
+            rate = (1 / Math.sqrt(this.price)) * 200;
+        } else {
+            rate = 2 * ((100 - (this.price / 90) * 100) / 3);
+        }
+        this.demandRate = Math.floor(Math.max(0, rate));
     }
 
 
@@ -277,6 +417,9 @@ class Game {
 
     // Jeans Sat!
     purchaseJeans = () => {
+        if (!this.currentJeans > 0) {
+            return;
+        }
         this.currentJeans -= 1;
         this.soldJeans += 1;
         this.money += this.price
