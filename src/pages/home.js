@@ -27,7 +27,7 @@ class home extends Component {
 
         const {
             lastManufacturedRate,
-            demandRate,
+            //demandRate,
             manufacturedJeans,
             price,
             buyCotton,

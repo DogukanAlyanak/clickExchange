@@ -254,7 +254,7 @@ class Game {
         if (this.UnitCottonMoneyCost <= this.AutoBuyerBuyMoneyStartPrice) {
             this.AutoBuyerStartBuyLever = true
         }
-        if (this.UnitCottonMoneyCost == this.AutoBuyerBuyMoneyTopLimit) {
+        if (this.UnitCottonMoneyCost === this.AutoBuyerBuyMoneyTopLimit) {
             this.AutoBuyerStartBuyLever = false
         }
     }
