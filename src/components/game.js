@@ -6,12 +6,13 @@ class Game {
 
     // Materials - Materialler
     cotton = 0;                 // Pamuk
-    money = 3000;               // Para (Kasadaki)
+    money = 2000;               // Para (Kasadaki)
+    earnedMoney = 0;            // Kazanılan Para
 
     // Pricing - Fiyatlandırma
     price = 20;                 // Jeans Ürün fiyatı
-    UnitJeansCottonCost = 600;  // Jeans'in Pamuk Bedeli
-    firstUnitCottonMoneyCost = 30;   // Pamuğun İlk TL Bedeli
+    UnitJeansCottonCost = 650;  // Jeans'in Pamuk Bedeli
+    firstUnitCottonMoneyCost = 20;   // Pamuğun İlk TL Bedeli
     UnitCottonMoneyCost = this.firstUnitCottonMoneyCost;  // anlık
 
     // Halkın Talebi
@@ -27,19 +28,29 @@ class Game {
     cottonBuyCount = 0;
     lastCottonBuyCount = 0;
     cottonBuyingRate = 0;
+    buyingCottonAmount = 1000
 
     // Satın Alma Müdürü
     SalesLimitForBuyAutoBuyer = 150
     AutoBuyerCost = 25800
     hasAutoBuyer = false;
     AutoBuyerWorkStatus = false;
-    AutoBuyerBuyCottonTopLimit = 2000
+    AutoBuyerBuyCottonTopLimit = this.buyingCottonAmount
     AutoBuyerBuyMoneyTopLimit = this.UnitCottonMoneyCost + 10
     AutoBuyingCottonIncreaseAndDecreaseAmount = 100
     AutoBuyingMoneyIncreaseAndDecreaseAmount = 1
+    AutoBuyerBuyMoneyStartPrice = this.UnitCottonMoneyCost
+    AutoBuyerStartBuyLever = false
+
+
 
     // Oyun Döngüsü
     update = () => {
+
+        // Auto Buyer Almaya başlamalı mı ?
+        this.AutoBuyerStartBuyLeverToggle()
+
+        // Auto Buyer Satın alımı
         if (
             this.cotton <= this.AutoBuyerBuyCottonTopLimit
             && this.canBuyCotton
@@ -47,10 +58,10 @@ class Game {
             && this.UnitCottonMoneyCost <= this.AutoBuyerBuyMoneyTopLimit
             && this.AutoBuyerWorkStatus === true
             && this.money >= this.UnitCottonMoneyCost
+            && this.AutoBuyerStartBuyLever === true
         ) {
             this.buyCotton()
         }
-
 
 
 
@@ -85,17 +96,19 @@ class Game {
 
 
         // Malzeme Satın alma Oranı Hesapla - Calculate Material Buying Rate
-        if (Date.now() - this.cottonCostLastUpdated > 4000) {
+        if (Date.now() - this.cottonCostLastUpdated > 3200) {
             if (this.cottonBuyingRate === 0) {
-                if (this.UnitCottonMoneyCost > 30) {
+                if (this.UnitCottonMoneyCost > 
+                            this.firstUnitCottonMoneyCost) {
                     this.UnitCottonMoneyCost -= Math.floor(Math.random() * 6)   // Update Material Price
-                    if (this.UnitCottonMoneyCost < 30) {
+                    if (this.UnitCottonMoneyCost < 
+                                this.firstUnitCottonMoneyCost) {
                         this.UnitCottonMoneyCost = this.firstUnitCottonMoneyCost
                     }
                 }
 
             } else {
-                this.UnitCottonMoneyCost += Math.floor((this.cottonBuyingRate + 2));    // Update Material Price
+                this.UnitCottonMoneyCost += Math.floor((this.cottonBuyingRate + Math.floor(Math.random() * 15)));    // Update Material Price
             }
 
             this.cottonCostLastUpdated = Date.now();
@@ -184,13 +197,13 @@ class Game {
             return;
         }
         this.AutoBuyerBuyCottonTopLimit
-            -= this.AutoBuyingCottonIncreaseAndDecreaseAmount
+            -= this.buyingCottonAmount
     }
 
     // Otomatik Satın Alma Pamuk Üst Limitini Arttır!
     increaseAutoBuyingTopLimit = () => {
         this.AutoBuyerBuyCottonTopLimit
-            += this.AutoBuyingCottonIncreaseAndDecreaseAmount
+            += this.buyingCottonAmount
     }
 
     // Otomatik Satın Alma Durumu Toogle
@@ -198,24 +211,52 @@ class Game {
         this.AutoBuyerWorkStatus = !this.AutoBuyerWorkStatus
     }
 
-    // Otomatik Satın Alma Para Limiti Arttırılabilir mi?
+    // Otomatik Satın Alma Para Limiti Azaltılabilir mi?
     canAutoBuyerDecreaseMoneyLimit = () => {
         return this.AutoBuyerBuyMoneyTopLimit > 0
     }
 
-    // Otomatik Satın Alma Para Limiti Arttır!
+    // Otomatik Satın Alma Başlama Limiti Azaltılabilir mi?
+    canAutoBuyerStartingDecreaseMoneyLimit = () => {
+        return this.AutoBuyerBuyMoneyStartPrice > 0
+    }
+
+    // Otomatik Satın Alma Başlama Limiti Arttır!
     AutoBuyerIncreaseMoneyLimit = () => {
         this.AutoBuyerBuyMoneyTopLimit
             += this.AutoBuyingMoneyIncreaseAndDecreaseAmount
     }
 
-    // Otomatik Satın Alma Para Limiti Arttır!
+    // Otomatik Satın Alma Başlama Limiti Azalt!
     AutoBuyerDecreaseMoneyLimit = () => {
         if (!this.canAutoBuyerDecreaseMoneyLimit()) {
             return;
         }
         this.AutoBuyerBuyMoneyTopLimit
             -= this.AutoBuyingMoneyIncreaseAndDecreaseAmount
+    }
+
+    // Otomatik Satın Almaya Başlama Para Limiti Arttır!
+    AutoBuyerIncreaseStartingMoneyLimit = () => {
+        this.AutoBuyerBuyMoneyStartPrice += 1
+    }
+
+    // Otomatik Satın Almaya Başlama Para Limiti Azalt!
+    AutoBuyerDecreaseStartingMoneyLimit = () => {
+        if (!this.canAutoBuyerStartingDecreaseMoneyLimit()) {
+            return;
+        }
+        this.AutoBuyerBuyMoneyStartPrice -= 1
+    }
+
+    // Otomatik Satın Alma Satın Alıma Başlama Şalter Aç/Kapat
+    AutoBuyerStartBuyLeverToggle = () => {
+        if (this.UnitCottonMoneyCost <= this.AutoBuyerBuyMoneyStartPrice) {
+            this.AutoBuyerStartBuyLever = true
+        }
+        if (this.UnitCottonMoneyCost == this.AutoBuyerBuyMoneyTopLimit) {
+            this.AutoBuyerStartBuyLever = false
+        }
     }
 
 
@@ -371,7 +412,7 @@ class Game {
         if (!this.canBuyCotton()) {
             return
         }
-        this.cotton += 1000;
+        this.cotton += this.buyingCottonAmount;
         this.cottonBuyCount++;
         this.money -= this.UnitCottonMoneyCost;
     }
@@ -423,6 +464,7 @@ class Game {
         this.currentJeans -= 1;
         this.soldJeans += 1;
         this.money += this.price
+        this.earnedMoney = this.earnedMoney + this.price
     }
 
 }

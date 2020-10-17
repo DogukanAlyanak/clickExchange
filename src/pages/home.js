@@ -35,7 +35,8 @@ class home extends Component {
             cotton,
             currentJeans,
             soldJeans,
-            money
+            money,
+            earnedMoney
         } = this.game;
 
         return (
@@ -105,14 +106,14 @@ class home extends Component {
                         </td>
                     </tr>
 
-                    <tr>
+                    {/* <tr>
                         <td>
                             Halkın Talebi :
                         </td>
                         <td>
                             %{demandRate}
                         </td>
-                    </tr>
+                    </tr> */}
 
                     <tr>
                         <td>
@@ -120,6 +121,15 @@ class home extends Component {
                         </td>
                         <td>
                             {soldJeans}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Kazanılan Para :
+                        </td>
+                        <td>
+                            {earnedMoney} ₺
                         </td>
                     </tr>
 
@@ -178,7 +188,7 @@ class home extends Component {
                                 disabled={!this.game.canBuyCotton()}
                                 onClick={buyCotton}
                             >
-                                1 Kg Pamuk Al ({UnitCottonMoneyCost}₺)
+                                3 Kg Pamuk Al ({UnitCottonMoneyCost}₺)
                             </button>
                         </td>
                     </tr>
@@ -187,7 +197,7 @@ class home extends Component {
                 <table className="part-header">
                     <tr>
                         <td>
-                            <h4>Çalışanlar</h4>
+                            <h3>Çalışanlar</h3>
                         </td>
                         <td>
                             <div style={{ float: "right" }}>
@@ -196,6 +206,7 @@ class home extends Component {
                         </td>
                     </tr>
                 </table>
+                <hr />
 
                 <table className="tl-body">
 
@@ -404,27 +415,32 @@ class home extends Component {
                         (
                             <tr>
                                 <td style={{ width: "40%" }}>
-                                    Otomatik Pamuk <br />
+                                    Otomatik Pamuk 
+                                    <br />
                                     Alma Üst Limiti :
-                        </td>
+                                    <br />
+                                    Almaya Başlama Fiyatı :
+                                </td>
                                 <td style={{ width: "30%" }}>
                                     {this.game.AutoBuyerBuyCottonTopLimit} gr
                                     <br />
                                     {this.game.AutoBuyerBuyMoneyTopLimit} ₺
-                        </td>
+                                    <br />
+                                    {this.game.AutoBuyerBuyMoneyStartPrice} ₺
+                                </td>
                                 <td style={{ width: "30%" }}>
                                     <button
                                         onClick={() => this.game.increaseAutoBuyingTopLimit()}
                                     >
                                         +
-                            </button>&nbsp;
+                                    </button>&nbsp;
                                      <button
                                         disabled={!this.game.canDecreaseAutoBuyingTopLimit()}
                                         onClick={() => this.game.decreaseAutoBuyingTopLimit()}
                                     >
                                         -
-                            </button>&nbsp;
-                            <button
+                                    </button>&nbsp;
+                                    <button
                                         disabled={null}
                                         onClick={() => this.game.AutoBuyerWorkStatusToggle()}
                                         title="Otomatik Pamuk Satın Alma"
@@ -447,7 +463,21 @@ class home extends Component {
                                         onClick={() => this.game.AutoBuyerDecreaseMoneyLimit()}
                                     >
                                         -
-                            </button>
+                                    </button>
+
+                                    <br />
+
+                                    <button
+                                        onClick={() => this.game.AutoBuyerIncreaseStartingMoneyLimit()}
+                                    >
+                                        +
+                                     </button>&nbsp;
+                                     <button
+                                        disabled={!this.game.canAutoBuyerStartingDecreaseMoneyLimit()}
+                                        onClick={() => this.game.AutoBuyerDecreaseStartingMoneyLimit()}
+                                    >
+                                        -
+                                    </button>
                                 </td>
                             </tr>
                         )}
@@ -461,7 +491,3 @@ class home extends Component {
     }
 }
 export default home;
-
-
-// min 10 talep tavan
-// max 70 talep yok
