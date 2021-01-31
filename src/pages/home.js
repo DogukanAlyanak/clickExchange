@@ -36,7 +36,8 @@ class home extends Component {
             currentJeans,
             soldJeans,
             money,
-            earnedMoney
+            earnedMoney,
+            buyingCottonAmount
         } = this.game;
 
         return (
@@ -188,7 +189,7 @@ class home extends Component {
                                 disabled={!this.game.canBuyCotton()}
                                 onClick={buyCotton}
                             >
-                                3 Kg Pamuk Al ({UnitCottonMoneyCost}₺)
+                                {buyingCottonAmount / 1000} Kg Pamuk Al ({UnitCottonMoneyCost}₺)
                             </button>
                         </td>
                     </tr>

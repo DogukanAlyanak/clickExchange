@@ -11,7 +11,7 @@ class Game {
 
     // Pricing - Fiyatlandırma
     price = 20;                 // Jeans Ürün fiyatı
-    UnitJeansCottonCost = 650;  // Jeans'in Pamuk Bedeli
+    UnitJeansCottonCost = 450;  // Jeans'in Pamuk Bedeli
     firstUnitCottonMoneyCost = 20;   // Pamuğun İlk TL Bedeli
     UnitCottonMoneyCost = this.firstUnitCottonMoneyCost;  // anlık
 
@@ -100,7 +100,7 @@ class Game {
             if (this.cottonBuyingRate === 0) {
                 if (this.UnitCottonMoneyCost > 
                             this.firstUnitCottonMoneyCost) {
-                    this.UnitCottonMoneyCost -= Math.floor(Math.random() * 6)   // Update Material Price
+                    this.UnitCottonMoneyCost -= Math.floor(Math.random() * 7)   // Update Material Price
                     if (this.UnitCottonMoneyCost < 
                                 this.firstUnitCottonMoneyCost) {
                         this.UnitCottonMoneyCost = this.firstUnitCottonMoneyCost
@@ -108,7 +108,8 @@ class Game {
                 }
 
             } else {
-                this.UnitCottonMoneyCost += Math.floor((this.cottonBuyingRate + Math.floor(Math.random() * 15)));    // Update Material Price
+                this.UnitCottonMoneyCost 
+                    += Math.floor((this.cottonBuyingRate + Math.floor(Math.random() * 3)));    // Update Material Price
             }
 
             this.cottonCostLastUpdated = Date.now();
